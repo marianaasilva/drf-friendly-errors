@@ -3,8 +3,8 @@ from rest_framework.test import APIRequestFactory
 
 from rest_framework_friendly_errors import settings
 
-from tests import BaseTestCase
-from tests.views import SnippetList
+from . import BaseTestCase
+from .views import SnippetList
 
 
 class ExceptionHandlerTestCase(BaseTestCase):
@@ -22,7 +22,8 @@ class ExceptionHandlerTestCase(BaseTestCase):
 
     def test_handler_do_not_touch_pretty_errors(self):
         self.data_set['language'] = 'node.js'
-        request = self.factory.post(reverse('snippet-list'), data=self.data_set)
+        request = self.factory.post(reverse('snippet-list'),
+                                    data=self.data_set)
         response = SnippetList.as_view()(request)
         self.assertNotIn('status_code', response.data)
 

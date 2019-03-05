@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
 
 from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.exceptions import ValidationError as RestValidationError
+from django.utils.encoding import force_text
+from rest_framework.exceptions import ValidationError as RestValidationError, \
+    ErrorDetail
 from rest_framework.utils.serializer_helpers import ReturnDict
 
 from rest_framework_friendly_errors import settings
@@ -31,7 +33,9 @@ class FriendlyErrorMessagesMixin(FieldMap):
                                  'an error code')
             error = {'code': error_code, 'message': error_message,
                      'field': None}
+            key = '%s_%s_%s' % (error_message, error_code, field_name)
         else:
+            key = field_name
             field_instance = self.fields.get(field_name)
             if field_instance is None:
                 raise ValueError('Incorrect field name')
@@ -53,9 +57,11 @@ class FriendlyErrorMessagesMixin(FieldMap):
                                      (error_key, field_type))
             error = {'code': error_code, 'field': field_name,
                      'message': error_message}
-        key = '%s_%s_%s' % (error_message, error_code, field_name)
-        self.registered_errors[key] = error
-        raise RestValidationError(key)
+        if field_name is not None:
+            self.registered_errors[field_name] = error
+        else:
+            self.registered_errors[key] = error
+        raise RestValidationError(self.registered_errors)
 
     def get_field_kwargs(self, field, field_data):
         field_type = field.__class__.__name__
@@ -147,8 +153,13 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 return validator
 
     def get_field_error_entry(self, error, field):
-        if error in self.registered_errors:
-            return self.registered_errors[error]
+        if field.field_name in self.registered_errors:
+            return self.registered_errors[field.field_name]
+
+        if isinstance(error, dict):
+            _, errors = list(error.items())[0]
+            error = force_text(errors[0])
+
         field_type = field.__class__.__name__
         key = self.find_key(field, error, field.field_name)
         if not key:
@@ -159,7 +170,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
                     name = validator.__name__
                 except AttributeError:
                     name = validator.__class__.__name__
-                code = self.FIELD_VALIDATION_ERRORS.get(name) or settings.FRIENDLY_VALIDATOR_ERRORS.get(name)
+                code = self.FIELD_VALIDATION_ERRORS.get(name) or \
+                       settings.FRIENDLY_VALIDATOR_ERRORS.get(name)
                 return {'code': code,
                         'field': field.field_name,
                         'message': error}
@@ -168,7 +180,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
             validator = getattr(self, "validate_%s" % field.field_name)
             if self._run_validator(validator, field, error):
                 name = validator.__name__
-                code = self.FIELD_VALIDATION_ERRORS.get(name) or settings.FRIENDLY_VALIDATOR_ERRORS.get(name)
+                code = self.FIELD_VALIDATION_ERRORS.get(name) or \
+                       settings.FRIENDLY_VALIDATOR_ERRORS.get(name)
                 return {'code': code, 'field': field.field_name,
                         'message': error}
         return {'code': settings.FRIENDLY_FIELD_ERRORS.get(
@@ -180,15 +193,22 @@ class FriendlyErrorMessagesMixin(FieldMap):
         return [self.get_field_error_entry(error, field) for error in errors]
 
     def get_non_field_error_entry(self, error):
-        if error in self.registered_errors:
-            return self.registered_errors[error]
+        if isinstance(error, dict):
+            error = list(error.keys())[0]
+        elif isinstance(error, ErrorDetail):
+            error = str(error)
+
+        for registered_error in self.registered_errors:
+            if error in registered_error:
+                return registered_error[error][0]
 
         if settings.INVALID_DATA_MESSAGE.format(
                 data_type=type(self.initial_data).__name__) == error:
             return {'code': settings.FRIENDLY_NON_FIELD_ERRORS.get('invalid'),
                     'field': None,
                     'message': error}
-        code = self.NON_FIELD_ERRORS.get(error) or settings.FRIENDLY_NON_FIELD_ERRORS.get(error)
+        code = self.NON_FIELD_ERRORS.get(error) or \
+               settings.FRIENDLY_NON_FIELD_ERRORS.get(error)
         return {'code': code, 'field': None, 'message': error}
 
     def get_non_field_error_entries(self, errors):

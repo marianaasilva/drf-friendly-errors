@@ -9,15 +9,13 @@ Overview
 This package extends default error JSON body providing configurable error codes
 and more consumable response structure.
 
-It turns default JSON body of HTTP 400 response, which look like this
+It turns default JSON body of HTTP 400 response, which look like this:
 
 .. code:: python
 
     {
         "name": ["This field is required."],
         "password": ["This field may not be blank."]
-        "age": ["This field may not be null."]
-        "description": ["Ensure this field has no more than 100 characters."]
     }
 
 into
@@ -55,9 +53,9 @@ Library handles all `Django REST framework`_ built-in serializer validation.
 
 Requirements
 ------------
--  Python (2.7, 3.4)
--  Django (1.8, 1.9)
--  Django REST framework (3.3)
+-  Python (2.7, 3.5, 3.6, 3.7)
+-  Django (<2.0, >=1.8)
+-  Django REST framework (<3.9, >=3.5)
 
 Installation
 ------------
@@ -157,7 +155,7 @@ add this exception handler to your REST_FRAMEWORK settings
 
     REST_FRAMEWORK = {
         'EXCEPTION_HANDLER':
-        'rest_framework_friendly_errors.handlers.friendly_exception_handler'
+        'rest_framework_friendly_errors.handlers.drf_exception_handler'
     }
 
 Default error codes

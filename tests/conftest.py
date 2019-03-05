@@ -11,7 +11,7 @@ def pytest_configure():
         },
         SECRET_KEY='not important here',
         ROOT_URLCONF='tests.urls',
-        MIDDLEWARE_CLASSES=(
+        MIDDLEWARE=(
             'django.middleware.common.CommonMiddleware',
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -28,7 +28,7 @@ def pytest_configure():
         ),
         REST_FRAMEWORK={
             'EXCEPTION_HANDLER':
-            'rest_framework_friendly_errors.handlers.friendly_exception_handler'
+            'rest_framework_friendly_errors.handlers.drf_exception_handler'
         },
         LANGUAGE_CODE='pl'
     )

@@ -5,7 +5,7 @@ from rest_framework_friendly_errors import settings
 from rest_framework_friendly_errors.utils import is_pretty
 
 
-def friendly_exception_handler(exc, context):
+def drf_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if not response and settings.CATCH_ALL_EXCEPTIONS:
