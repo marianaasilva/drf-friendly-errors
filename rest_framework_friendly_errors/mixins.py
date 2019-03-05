@@ -66,7 +66,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
     def get_field_kwargs(self, field, field_data):
         field_type = field.__class__.__name__
         kwargs = {
-            'data_type': type(field_data).__name__
+            'data_type': type(field_data).__name__,
+            'input_type': type(field_data).__name__
         }
         if field_type in self.field_map['boolean']:
             kwargs.update({'input': field_data})

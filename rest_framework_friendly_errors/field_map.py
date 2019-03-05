@@ -25,6 +25,7 @@ class FieldMap(object):
             'relation': ['StringRelatedField', 'PrimaryKeyRelatedField',
                          'HyperlinkedRelatedField', 'SlugRelatedField',
                          'HyperlinkedIdentityField', 'ManyRelatedField'],
+            'serializer': ['ListSerializer'],
             'miscellaneous': ['ReadOnlyField', 'HiddenField', 'ModelField',
                               'SerializerMethodField']
         }
