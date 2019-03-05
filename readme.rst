@@ -70,7 +70,7 @@ Or using pip
 
 .. code:: bash
 
-    $ pip install drf-friendly-errors
+    $ pip install drf-friendly-errors-mod
 
 Usage
 -----
@@ -89,13 +89,13 @@ settings.py
 .. code:: python
 
     FRIENDLY_ERRORS = {
-        FIELD_ERRORS = {
+        "FIELD_ERRORS": {
             'CharField': {'required': 10, 'null':11, 'blank': 12, 'max_length': 13, 'min_length': 14}
-        }
-        VALIDATOR_ERRORS = {
+        },
+        "VALIDATOR_ERRORS": {
             'UniqueValidator': 50
         },
-        EXCEPTION_DICT = {
+        "EXCEPTION_DICT": {
             'PermissionDenied': 100
         }
     }
