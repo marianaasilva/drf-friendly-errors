@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import sys
+from os import path
 
 from setuptools import setup
 
@@ -45,6 +46,9 @@ def get_package_data(package):
 
 version = get_version('rest_framework_friendly_errors')
 
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'readme.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 if sys.argv[-1] == 'publish':
     if os.system("pip freeze | grep wheel"):
@@ -70,6 +74,8 @@ setup(
     license='MIT',
     description='Extension for displaying serializer validation errors'
                 ' in Django Rest Framework',
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
     author='Tomasz Łaszczuk',
     author_email='t.laszczuk@futuremind.com',
     packages=get_packages('rest_framework_friendly_errors'),

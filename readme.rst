@@ -177,7 +177,7 @@ Default field error codes
 Field is required
 
 - 2001: BooleanField, NullBooleanField
-- 2002: CharField, EmailField, RegexField, SlugField, URLField, UUIDField, FilePathField, IPAddressField
+- 2002: CharField, EmailField, PasswordField, RegexField, SlugField, URLField, UUIDField, FilePathField, IPAddressField
 - 2003: IntegerField, FloatField, DecimalField
 - 2004: ChoiceField, MultipleChoiceField
 - 2005: FileField, ImageField
@@ -188,7 +188,7 @@ Field is required
 Field data is invalid (invalid regex, string instead of number, date, etc.)
 
 - 2011: BooleanField, NullBooleanField
-- 2012: EmailField, RegexField, SlugField, URLField, UUIDField, IPAddressField
+- 2012: CharField, EmailField, PasswordField, RegexField, SlugField, URLField, UUIDField, IPAddressField
 - 2013: IntegerField, FloatField, DecimalField
 - 2014: FileField, ImageField
 - 2015: DateTimeField, DateField, TimeField, DurationField
@@ -196,7 +196,7 @@ Field data is invalid (invalid regex, string instead of number, date, etc.)
 Field data cannot be null
 
 - 2021: BooleanField, NullBooleanField
-- 2022: CharField, EmailField, RegexField, SlugField, URLField, UUIDField, FilePathField, IPAddressField
+- 2022: CharField, EmailField, PasswordField, RegexField, SlugField, URLField, UUIDField, FilePathField, IPAddressField
 - 2023: IntegerField, FloatField, DecimalField
 - 2024: ChoiceField, MultipleChoiceField
 - 2025: FileField, ImageField
@@ -206,17 +206,17 @@ Field data cannot be null
 
 Field data cannot be blank
 
-- 2031: CharField, EmailField, RegexField, SlugField, URLField, UUIDField, IPAddressField
+- 2031: CharField, EmailField, PasswordField, RegexField, SlugField, URLField, UUIDField, IPAddressField
 
 Field data is too long string
 
-- 2041: CharField, EmailField, RegexField, SlugField, URLField, UUIDField, IPAddressField
+- 2041: CharField, EmailField, PasswordField, RegexField, SlugField, URLField, UUIDField, IPAddressField
 - 2042: IntegerField, FloatField, DecimalField
 - 2043: FileField, ImageField
 
 Field data is too short string
 
-- 2051: CharField, EmailField, RegexField, SlugField, URLField, UUIDField, IPAddressField
+- 2051: CharField, EmailField, PasswordField, RegexField, SlugField, URLField, UUIDField, IPAddressField
 
 Field data is too big number
 
@@ -323,6 +323,7 @@ Other error codes not related to serializer validation
 - Authentication Failed (invalid credentials were provided): 4002,
 - Not Authenticated (no credentials were provided): 4003,
 - Not Found: 4004,
+- HTTP 404: 4004,
 - Permission Denied: 4005,
 - Method Not Allowed (invalid HTTP method): 4006,
 - Not Acceptable (Could not satisfy the request Accept header): 4007,
