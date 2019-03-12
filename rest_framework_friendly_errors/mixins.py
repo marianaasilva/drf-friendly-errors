@@ -133,7 +133,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
                     field, message, kwargs):
                 return key
             unformatted = field.error_messages[key]
-            if unformatted.format(**kwargs) == message:
+            if unformatted.format(**kwargs) in message:
                 return key
         if getattr(field, 'child_relation', None):
             return self.find_key(field=field.child_relation, message=message,
@@ -178,7 +178,13 @@ class FriendlyErrorMessagesMixin(FieldMap):
                         'message': error}
             # Here we know that error was raised by custom validate method
             # in serializer
-            validator = getattr(self, "validate_%s" % field.field_name)
+            validator = getattr(self, "validate_%s" % field.field_name, None)
+            if validator is None:
+                code = settings.FRIENDLY_FIELD_ERRORS.get(
+                field_type, {}).get(error)
+                return {'code': code, 'field': field.field_name,
+                        'message': error}
+
             if self._run_validator(validator, field, error):
                 name = validator.__name__
                 code = self.FIELD_VALIDATION_ERRORS.get(name) or \
