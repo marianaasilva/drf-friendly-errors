@@ -19,8 +19,9 @@ def drf_exception_handler(exc, context):
         error_code = settings.FRIENDLY_EXCEPTION_DICT.get(
             exc.__class__.__name__)
         response.data.pop('detail', {})
-        response.data['code'] = error_code
-        response.data['message'] = error_message
-        response.data['status_code'] = response.status_code
+        if not response.data:
+            response.data['code'] = error_code
+            response.data['message'] = error_message
+        # response.data['status_code'] = response.status_code
 
     return response
