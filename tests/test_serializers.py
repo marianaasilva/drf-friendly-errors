@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from rest_framework_friendly_errors import settings
-from rest_framework_friendly_errors.mixins import FriendlyErrorMessagesMixin
+from rest_framework_friendly_errors.mixins import ErrorMessagesMixin
 
 from tests import BaseTestCase
 from tests.serializers import SnippetSerializer, AnotherSnippetSerializer
 from tests.utils import run_is_valid
 
 
-class SimpleSerializerClass(FriendlyErrorMessagesMixin, serializers.Serializer):
+class SimpleSerializerClass(ErrorMessagesMixin, serializers.Serializer):
     text_field = serializers.CharField(max_length=255)
     integer_field = serializers.IntegerField()
     boolean_field = serializers.BooleanField(default=True)

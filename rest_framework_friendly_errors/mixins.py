@@ -8,17 +8,17 @@ from rest_framework_friendly_errors import settings
 from rest_framework_friendly_errors.field_map import FieldMap
 
 
-class FriendlyErrorMessagesMixin(FieldMap):
+class ErrorMessagesMixin(FieldMap):
     FIELD_VALIDATION_ERRORS = {}
     NON_FIELD_ERRORS = {}
 
     def __init__(self, *args, **kwargs):
         self.registered_errors = {}
-        super(FriendlyErrorMessagesMixin, self).__init__(*args, **kwargs)
+        super(ErrorMessagesMixin, self).__init__(*args, **kwargs)
 
     @property
     def errors(self):
-        ugly_errors = super(FriendlyErrorMessagesMixin, self).errors
+        ugly_errors = super(ErrorMessagesMixin, self).errors
         pretty_errors = self.build_pretty_errors(ugly_errors)
         return ReturnDict(pretty_errors, serializer=self)
 

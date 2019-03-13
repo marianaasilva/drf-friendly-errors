@@ -1,7 +1,7 @@
 from django.template.defaultfilters import title
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework_friendly_errors.mixins import FriendlyErrorMessagesMixin
+from rest_framework_friendly_errors.mixins import ErrorMessagesMixin
 from tests.models import LANGUAGE_CHOICES, Snippet
 
 
@@ -10,7 +10,7 @@ def is_proper_title(value):
         raise ValidationError('Incorrect title')
 
 
-class SnippetSerializer(FriendlyErrorMessagesMixin, serializers.Serializer):
+class SnippetSerializer(ErrorMessagesMixin, serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=10, validators=[is_proper_title])
     comment = serializers.CharField(max_length=255)
@@ -39,7 +39,7 @@ class SnippetSerializer(FriendlyErrorMessagesMixin, serializers.Serializer):
     NON_FIELD_ERRORS = {'Must be a python language': 8000}
 
 
-class AnotherSnippetSerializer(FriendlyErrorMessagesMixin,
+class AnotherSnippetSerializer(ErrorMessagesMixin,
                                serializers.Serializer):
     """
     Mirror snippet for test register error mixin method
@@ -74,7 +74,7 @@ class AnotherSnippetSerializer(FriendlyErrorMessagesMixin,
     NON_FIELD_ERRORS = {'Must be a python language': 8000}
 
 
-class SnippetModelSerializer(FriendlyErrorMessagesMixin,
+class SnippetModelSerializer(ErrorMessagesMixin,
                              serializers.ModelSerializer):
     class Meta:
         model = Snippet
@@ -99,7 +99,7 @@ class SnippetModelSerializer(FriendlyErrorMessagesMixin,
     NON_FIELD_ERRORS = {'Must be a python language': 8000}
 
 
-class AnotherSnippetModelSerializer(FriendlyErrorMessagesMixin,
+class AnotherSnippetModelSerializer(ErrorMessagesMixin,
                                     serializers.ModelSerializer):
     class Meta:
         model = Snippet
@@ -127,7 +127,7 @@ class AnotherSnippetModelSerializer(FriendlyErrorMessagesMixin,
 
 
 class ThirdSnippetSerializer(
-    FriendlyErrorMessagesMixin,
+    ErrorMessagesMixin,
     serializers.ModelSerializer
 ):
     class Meta:

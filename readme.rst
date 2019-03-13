@@ -63,13 +63,13 @@ Or using pip
 Usage
 -----
 
-Simply add a FriendlyErrorMessagesMixin to your serializer or model serializer class
+Simply add a ErrorMessagesMixin to your serializer or model serializer class
 
 .. code:: python
 
-    from rest_framework_friendly_errors.mixins import FriendlyErrorMessagesMixin
+    from rest_framework_friendly_errors.mixins import ErrorMessagesMixin
 
-    class MySerializer(FriendlyErrorMessagesMixin, ModelSerializer):
+    class MySerializer(ErrorMessagesMixin, ModelSerializer):
 
 If you want to change default library settings and provide your own set of error codes just add following in your
 settings.py
@@ -95,7 +95,7 @@ If you need custom field validation or validation for whole serializer register 
 
 .. code:: python
 
-    class PostSerializer(FriendlyErrorMessagesMixin,
+    class PostSerializer(ErrorMessagesMixin,
                          serializers.ModelSerializer):
         class Meta:
             model = Post
@@ -119,7 +119,7 @@ If you want to raise field error in validate method use register_error method pr
 
 .. code:: python
 
-    class PostSerializer(FriendlyErrorMessagesMixin,
+    class PostSerializer(ErrorMessagesMixin,
                          serializers.ModelSerializer):
         class Meta:
             model = Post
