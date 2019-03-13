@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __title__ = 'drf-friendly-errors-mod'
-__version__ = '0.13.2'
+__version__ = '0.13.3'
 __author__ = 'Tomasz Łaszczuk'
 __contact__ = 't.laszczuk@futuremind.com'
 __license__ = 'MIT'
