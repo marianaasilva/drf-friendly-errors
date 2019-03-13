@@ -23,29 +23,17 @@ into
 .. code:: python
 
     {
-        "code" : 1001,
-        "message" : "Validation Failed",
-        "errors" : [
+        "name" : [
             {
                 "code" : 2002,
-                "field" : "name",
                 "message" : "This field is required."
-            },
+            }
+        ],
+        "password" : [
             {
                 "code" : 2031,
-                "field" : "password",
                 "message" : "This field may not be blank."
-            },
-            {
-                "code" : 2023,
-                "field" : "age",
-                "message" : "This field may not be null."
-            },
-            {
-                "code" : 2041,
-                "field" : "description",
-                "message" : "Ensure this field has no more than 100 characters."
-            },
+            }
         ]
     }
 
