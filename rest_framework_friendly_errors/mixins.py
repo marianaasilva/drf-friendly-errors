@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as RestValidationError, \
     ErrorDetail
+from rest_framework.serializers import Serializer, BaseSerializer
 from rest_framework.utils.serializer_helpers import ReturnDict
 from rest_framework_friendly_errors import settings
 from rest_framework_friendly_errors.field_map import FieldMap
@@ -228,6 +229,8 @@ class ErrorMessagesMixin(FieldMap):
             else:
                 field = self.fields[error_type]
                 error = errors[error_type]
+                if isinstance(error, dict) and isinstance(field, BaseSerializer):
+                    error = [list(error.values())[0][0]]
                 pretty.extend(
                     self.get_field_error_entries(error, field),
                 )
