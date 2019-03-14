@@ -26,13 +26,13 @@ into
         "name" : [
             {
                 "code" : 2002,
-                "message" : "This field is required."
+                "detail" : "This field is required."
             }
         ],
         "password" : [
             {
                 "code" : 2031,
-                "message" : "This field may not be blank."
+                "detail" : "This field may not be blank."
             }
         ]
     }
