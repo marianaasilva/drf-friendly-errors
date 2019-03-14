@@ -21,11 +21,11 @@ def drf_exception_handler(exc, context):
         response.data.pop('detail', {})
         if not response.data:
             response.data['code'] = error_code
-            response.data['message'] = error_message
+            response.data['detail'] = error_message
             # response.data['status_code'] = response.status_code
         elif 'code' in response.data:
             response.data = {
                 'code': error_code,
-                'message': error_message
+                'detail': error_message
             }
     return response

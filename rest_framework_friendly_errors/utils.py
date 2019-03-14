@@ -11,7 +11,7 @@ def update_field_settings(setting, user_setting):
 
 def is_pretty(response):
     data = response.data
-    if 'message' in data and 'code' in data and isinstance(data, dict) \
+    if 'detail' in data and 'code' in data and isinstance(data, dict) \
             and isinstance(data['errors'], list):
         return True
     return False

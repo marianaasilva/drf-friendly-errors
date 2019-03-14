@@ -30,8 +30,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['BooleanField']['invalid']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'linenos')
+        self.assertEqual(int(response.data['linenos'][0]['code']), code)
 
     def test_invalid_char_field(self):
         # Too long string
@@ -40,8 +39,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['CharField']['max_length']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
+        self.assertEqual(int(response.data['title'][0]['code']), code)
 
         # Empty string
         self.data_set['title'] = ''
@@ -49,8 +47,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['CharField']['blank']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
+        self.assertEqual(int(response.data['title'][0]['code']), code)
 
         # No data provided
         self.data_set.pop('title')
@@ -58,8 +55,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['CharField']['required']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
+        self.assertEqual(int(response.data['title'][0]['code']), code)
 
     def test_invalid_choice_field(self):
         # invalid choice
@@ -68,8 +64,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
+        self.assertEqual(int(response.data['language'][0]['code']), code)
 
         # empty string
         self.data_set['language'] = ''
@@ -77,8 +72,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
+        self.assertEqual(int(response.data['language'][0]['code']), code)
 
         # no data provided
         self.data_set.pop('language')
@@ -86,8 +80,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['required']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
+        self.assertEqual(int(response.data['language'][0]['code']), code)
 
     def test_invalid_decimal_field(self):
         # invalid
@@ -96,8 +89,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DecimalField']['invalid']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'rating')
+        self.assertEqual(int(response.data['rating'][0]['code']), code)
 
         # decimal places
         self.data_set['rating'] = 2.99
@@ -105,8 +97,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DecimalField']['max_decimal_places']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'rating')
+        self.assertEqual(int(response.data['rating'][0]['code']), code)
 
         # decimal max digits
         self.data_set['rating'] = 222.9
@@ -114,8 +105,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DecimalField']['max_digits']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'rating')
+        self.assertEqual(int(response.data['rating'][0]['code']), code)
 
     def test_datetime_field_error_content(self):
         # invalid
@@ -124,24 +114,21 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DateTimeField']['invalid']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'posted_date')
+        self.assertEqual(int(response.data['posted_date'][0]['code']), code)
 
     def test_custom_field_validation_method(self):
         self.data_set['comment'] = 'comment'
         request = self.factory.post(reverse('snippet-list'), data=self.data_set)
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['errors'][0]['field'], 'comment')
-        self.assertEqual(int(response.data['errors'][0]['code']), 5000)
+        self.assertEqual(int(response.data['comment'][0]['code']), 5000)
 
     def test_custom_field_validation_using_validators(self):
         self.data_set['title'] = 'A title'
         request = self.factory.post(reverse('snippet-list'), data=self.data_set)
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
-        self.assertEqual(int(response.data['errors'][0]['code']), 5001)
+        self.assertEqual(int(response.data['title'][0]['code']), 5001)
 
     def test_field_dependency_validation(self):
         self.data_set['title'] = 'A Python'
@@ -149,8 +136,7 @@ class ListViewTestCase(BaseTestCase):
         request = self.factory.post(reverse('snippet-list'), data=self.data_set)
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['errors'][0]['field'], 'None')
-        self.assertEqual(int(response.data['errors'][0]['code']), 8000)
+        self.assertEqual(int(response.data['non_field_errors'][0]['code']), 8000)
 
     def test_error_registration(self):
         self.data_set['title'] = 'A Python'
@@ -158,10 +144,9 @@ class ListViewTestCase(BaseTestCase):
         request = self.factory.post(reverse('snippet2-list'), data=self.data_set)
         response = Snippet2List.as_view()(request)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
         self.assertEqual(
-            int(response.data['errors'][0]['code']), code
+            int(response.data['language'][0]['code']), code
         )
 
     def test_couple_errors(self):
@@ -171,7 +156,7 @@ class ListViewTestCase(BaseTestCase):
         request = self.factory.post(reverse('snippet-list'), data=self.data_set)
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(len(response.data['errors']), 2)
+        self.assertEqual(len(response.data), 2)
 
     def test_unique_constraint(self):
         request = self.factory.post(reverse('snippet-list'), data=self.data_set)
@@ -180,8 +165,7 @@ class ListViewTestCase(BaseTestCase):
         response = SnippetList.as_view()(request)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_VALIDATOR_ERRORS['UniqueValidator']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'watermark')
+        self.assertEqual(int(response.data['watermark'][0]['code']), code)
 
 
 class DetailViewTestCase(BaseTestCase):
@@ -213,8 +197,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['BooleanField']['invalid']
-        self.assertEqual(response.data['errors'][0]['code'], code)
-        self.assertEqual(response.data['errors'][0]['field'], 'linenos')
+        self.assertEqual(response.data['linenos'][0]['code'], code)
 
     def test_upload_invalid_char_field(self):
         # Too long string
@@ -225,8 +208,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['CharField']['max_length']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
+        self.assertEqual(int(response.data['title'][0]['code']), code)
 
         # Empty string
         self.data_set['title'] = ''
@@ -236,8 +218,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['CharField']['blank']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
+        self.assertEqual(int(response.data['title'][0]['code']), code)
 
         # No data provided
         self.data_set.pop('title')
@@ -247,8 +228,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['CharField']['required']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'title')
+        self.assertEqual(int(response.data['title'][0]['code']), code)
 
     def test_upload_invalid_choice_field(self):
         # invalid choice
@@ -259,8 +239,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
+        self.assertEqual(int(response.data['language'][0]['code']), code)
 
         # empty string
         self.data_set['language'] = ''
@@ -270,8 +249,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['invalid_choice']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
+        self.assertEqual(int(response.data['language'][0]['code']), code)
 
         # no data provided
         self.data_set.pop('language')
@@ -281,8 +259,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['ChoiceField']['required']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'language')
+        self.assertEqual(int(response.data['language'][0]['code']), code)
 
     def test_upload_invalid_decimal_field(self):
         # invalid
@@ -293,8 +270,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DecimalField']['invalid']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'rating')
+        self.assertEqual(int(response.data['rating'][0]['code']), code)
 
         # decimal places
         self.data_set['rating'] = 2.99
@@ -304,8 +280,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DecimalField']['max_decimal_places']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'rating')
+        self.assertEqual(int(response.data['rating'][0]['code']), code)
 
         # decimal max digits
         self.data_set['rating'] = 222.9
@@ -315,8 +290,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DecimalField']['max_digits']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'rating')
+        self.assertEqual(int(response.data['rating'][0]['code']), code)
 
     def test_datetime_field_error_content(self):
         # invalid
@@ -327,8 +301,7 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_FIELD_ERRORS['DateTimeField']['invalid']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'posted_date')
+        self.assertEqual(int(response.data['posted_date'][0]['code']), code)
 
     def test_cannot_update_to_not_unique_watermark(self):
         self.data_set['watermark'] = 'TEST2'
@@ -340,5 +313,4 @@ class DetailViewTestCase(BaseTestCase):
         response = SnippetDetail.as_view()(request, pk=self.snippet.pk)
         self.assertEqual(response.status_code, 400)
         code = settings.FRIENDLY_VALIDATOR_ERRORS['UniqueValidator']
-        self.assertEqual(int(response.data['errors'][0]['code']), code)
-        self.assertEqual(response.data['errors'][0]['field'], 'watermark')
+        self.assertEqual(int(response.data['watermark'][0]['code']), code)

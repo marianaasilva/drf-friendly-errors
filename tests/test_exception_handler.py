@@ -15,8 +15,8 @@ class ExceptionHandlerTestCase(BaseTestCase):
     def test_server_error(self):
         response = self.client.get(reverse('server-error'))
         self.assertEqual(response.status_code, 500)
-        self.assertEqual(response.data['message'], 'APIException')
-        self.assertEqual(response.data['status_code'], 500)
+        self.assertEqual(response.data['detail'], 'APIException')
+        self.assertEqual(response.status_code, 500)
         self.assertEqual(response.data['code'],
                          settings.FRIENDLY_EXCEPTION_DICT.get('APIException'))
 
@@ -30,14 +30,14 @@ class ExceptionHandlerTestCase(BaseTestCase):
     def test_not_found(self):
         response = self.client.get(reverse('not-found'))
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.data['status_code'], 404)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(response.data['code'],
                          settings.FRIENDLY_EXCEPTION_DICT.get('NotFound'))
 
     def test_method_not_allowed(self):
         response = self.client.get(reverse('not-allowed'))
         self.assertEqual(response.status_code, 405)
-        self.assertEqual(response.data['status_code'], 405)
+        self.assertEqual(response.status_code, 405)
         self.assertEqual(
             response.data['code'],
             settings.FRIENDLY_EXCEPTION_DICT.get('MethodNotAllowed')
@@ -46,7 +46,7 @@ class ExceptionHandlerTestCase(BaseTestCase):
     def test_not_authenticated(self):
         response = self.client.get(reverse('not-authenticated'))
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data['status_code'], 403)
+        self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.data['code'],
             settings.FRIENDLY_EXCEPTION_DICT.get('NotAuthenticated')
