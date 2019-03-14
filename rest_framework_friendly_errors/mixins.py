@@ -65,6 +65,7 @@ class ErrorMessagesMixin(FieldMap):
         field_type = field.__class__.__name__
         kwargs = {
             'data_type': type(field_data).__name__,
+            'datatype': type(field_data).__name__,
             'input_type': type(field_data).__name__
         }
         if field_type in self.field_map['boolean']:
